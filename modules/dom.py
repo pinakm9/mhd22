@@ -53,7 +53,7 @@ class Box2D:
         y = tf.random.uniform(minval=-self.width/2., maxval=self.width/2., shape=(n_sample, 1))
         return self.center[0] + x, self.center[1] + y
 
-    def boundary_sample(self, n_smaple):
+    def boundary_sample(self, n_sample):
         a, b = self.center
         w, h = self.width, self.height
         # bottom edge
