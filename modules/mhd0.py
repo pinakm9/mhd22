@@ -3,6 +3,7 @@ import arch
 import tensorflow as tf 
 import time
 import os
+import matplotlib.pyplot as plt
 
 class MHD_8NN:
 
@@ -268,4 +269,32 @@ class MHD_2NN:
 
         self.sys.save_weights('{}/{}'.format(save_dir, self.sys.name))
         self.lam.save_weights('{}/{}'.format(save_dir, self.lam.name))
+
+    
+    def plot(self, resolution, save_dir):
+        self.sys.load_weights('{}/{}'.format(save_dir, self.sys.name)).expect_partial()
+        self.lam.load_weights('{}/{}'.format(save_dir, self.lam.name)).expect_partial()
+        fig = plt.figure(figsize=(16, 16))
+        ax_v = fig.add_subplot(221)
+        ax_p = fig.add_subplot(222)
+        ax_E = fig.add_subplot(223)
+        ax_B = fig.add_subplot(224)
+        x, y = self.domain.grid_sample(resolution)
+        grid = (resolution, resolution)
+        Bz, Ex, Ey, Cx, Cy, p, phi, vx, vy = self.compute_vars(x, y)
+        ax_v.quiver(x.reshape(grid), y.reshape(grid), vx.numpy().reshape(grid), vy.numpy().reshape(grid))
+        ax_v.set_title('velocity')
+        ax_E.quiver(x.reshape(grid), y.reshape(grid), Ex.numpy().reshape(grid), Ey.numpy().reshape(grid))
+        ax_E.set_title('electric field')
+        pc = ax_p.pcolormesh(x.reshape(grid), y.reshape(grid), p.numpy().reshape(grid), cmap='inferno')
+        fig.colorbar(pc, ax=ax_p)
+        ax_p.set_title('pressure')
+        ax_p.set_aspect('equal')
+        pc = ax_B.pcolormesh(x.reshape(grid), y.reshape(grid), Bz.numpy().reshape(grid), cmap='inferno')
+        fig.colorbar(pc, ax=ax_B)
+        ax_B.set_title('magnetic field')
+        ax_B.set_aspect('equal')
+        plt.savefig('{}/solution.png'.format(save_dir))
+
+        
 

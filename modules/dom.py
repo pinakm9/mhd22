@@ -8,9 +8,17 @@ class Disk:
         self.n_bdry_comps = 1 
 
     def sample(self, n_sample):
-        r = tf.random.uniform(minval=0., maxval=self.radius, shape=(n_sample, 1))
+        r = tf.sqrt(tf.random.uniform(minval=0., maxval=self.radius**2, shape=(n_sample, 1)))
         theta = tf.random.uniform(minval=0., maxval=2.0*np.pi, shape=(n_sample, 1))
         return self.center[0] + r*tf.cos(theta), self.center[1] + r*tf.sin(theta) 
+
+    def grid_sample(self, resolution):
+        r = np.sqrt(np.linspace(start=0., stop=self.radius**2, num=resolution, endpoint=True, dtype='float32'))
+        theta = np.linspace(start=0., stop=2.0*np.pi, num=resolution, endpoint=True, dtype='float32')
+        r, theta = np.meshgrid(r, theta)
+        r, theta = r.reshape(-1, 1), theta.reshape(-1, 1)
+        return self.center[0] + r*np.cos(theta), self.center[1] + r*np.sin(theta) 
+
 
     def boundary_sample(self, n_sample):
         theta = tf.random.uniform(minval=0., maxval=2.0*np.pi, shape=(n_sample, 1))
@@ -26,9 +34,16 @@ class Annulus:
         self.n_bdry_comps = 2
 
     def sample(self, n_sample):
-        r = tf.random.uniform(minval=self.in_radius, maxval=self.out_radius, shape=(n_sample, 1))
+        r = tf.sqrt(tf.random.uniform(minval=self.in_radius, maxval=self.out_radius**2, shape=(n_sample, 1)))
         theta = tf.random.uniform(minval=0., maxval=2.0*np.pi, shape=(n_sample, 1))
         return self.center[0] + r*tf.cos(theta), self.center[1] + r*tf.sin(theta)
+
+    def grid_sample(self, resolution):
+        r = np.sqrt(np.linspace(start=self.in_radius, stop=self.out_radius**2, num=resolution, endpoint=True, dtype='float32'))
+        theta = np.linspace(start=0., stop=2.0*np.pi, num=resolution, endpoint=True, dtype='float32')
+        r, theta = np.meshgrid(r, theta)
+        r, theta = r.reshape(-1, 1), theta.reshape(-1, 1)
+        return self.center[0] + r*np.cos(theta), self.center[1] + r*np.sin(theta)
 
     def boundary_sample(self, n_sample):
         theta = tf.random.uniform(minval=0., maxval=2.0*np.pi, shape=(n_sample, 1))
@@ -51,6 +66,13 @@ class Box2D:
     def sample(self, n_sample):
         x = tf.random.uniform(minval=-self.width/2., maxval=self.width/2., shape=(n_sample, 1))
         y = tf.random.uniform(minval=-self.width/2., maxval=self.width/2., shape=(n_sample, 1))
+        return self.center[0] + x, self.center[1] + y
+
+    def grid_sample(self, resolution):
+        x = np.linspace(start=-self.width/2., stop=self.width/2., num=resolution, endpoint=True, dtype='float32')
+        y = np.linspace(start=-self.width/2., stop=self.width/2., num=resolution, endpoint=True, dtype='float32')
+        x, y = np.meshgrid(x, y)
+        x, y = x.reshape(-1, 1), y.reshape(-1, 1)
         return self.center[0] + x, self.center[1] + y
 
     def boundary_sample(self, n_sample):
