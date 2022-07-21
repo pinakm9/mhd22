@@ -11,7 +11,7 @@ import mhd2 as mhd
 import dom
 import tensorflow as tf
 
-num_nodes = 500
+num_nodes = 100
 num_layers = 3
 domain = dom.Box3D()
 rho = 1.0 
@@ -21,9 +21,9 @@ init_mu = 1.
 
 
 beta = 1000.
-epochs = 100000 
+epochs = 10 
 n_sample = 10000 
-save_dir = "../../data/mhd2/4NN_AL_box_gadi"
+save_dir = "mhd2/4NN_AL_box_gadi"
 factor_mu = (500.)**(1./epochs)
 
 system = mhd.MHD_4NN_AL(num_nodes, num_layers, domain, rho, gamma, mu0, init_mu, factor_mu)
