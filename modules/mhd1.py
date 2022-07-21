@@ -71,6 +71,7 @@ class MHD_2NN:
         Bx, By, Bz, Cx, Cy, Cz, Ex, Ey, Ez, logp, vx, vy, vz = self.vars
         loss = 0.0
         loss += tf.reduce_mean((nx*vx + ny*vy + nz*vz)**2)
+        loss += tf.reduce_mean((nx*Bx + ny*By + nz*Bz)**2)
         loss += tf.reduce_mean(Cx**2 + Cy**2 + Cz**2)
         loss += tf.reduce_mean(Ex**2 + Ey**2 + Ez**2)
         return loss
