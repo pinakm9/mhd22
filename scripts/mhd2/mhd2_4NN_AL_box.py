@@ -21,7 +21,7 @@ init_mu = 1.
 
 
 beta = 1000.
-epochs = 1000 
+epochs = 10000
 n_sample = 1000 
 save_dir = "../../data/mhd2/4NN_AL_box"
 factor_mu = (500.)**(1./epochs)
@@ -30,6 +30,6 @@ system = mhd.MHD_4NN_AL(num_nodes, num_layers, domain, rho, gamma, mu0, init_mu,
 learning_rate = tf.keras.optimizers.schedules.PiecewiseConstantDecay([1000, 2000, 10000], [5e-3, 1e-3, 5e-4, 1e-4])
 optimizer_v = tf.keras.optimizers.Adam(learning_rate)
 optimizers_m = [tf.keras.optimizers.Adam(learning_rate) for _ in range(3)]
-# system.learn(optimizer_v, optimizers_m, beta, epochs, n_sample, save_dir)
+system.learn(optimizer_v, optimizers_m, beta, epochs, n_sample, save_dir)
 system.plot(6, save_dir)
 system.plot_constraints(6, save_dir)

@@ -329,7 +329,7 @@ class MHD_4NN_AL:
 
 
 
-class MHD_4NN:
+class MHD_1NN:
 
     def __init__(self, num_nodes, num_layers, domain, rho, gamma, mu0, init_mu, factor_mu):
         self.dim = 3

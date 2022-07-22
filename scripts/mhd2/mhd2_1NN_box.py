@@ -11,7 +11,7 @@ import mhd2 as mhd
 import dom
 import tensorflow as tf
 
-num_nodes = 500
+num_nodes = 100
 num_layers = 3
 domain = dom.Box3D()
 rho = 1.0 
@@ -21,12 +21,12 @@ init_mu = 1.
 
 
 beta = 1000.
-epochs = 100000 
-n_sample = 10000 
-save_dir = "../../data/mhd2/4NN_box_gadi"
+epochs = 10000 
+n_sample = 1000 
+save_dir = "../../data/mhd2/1NN_box"
 factor_mu = (500.)**(1./epochs)
 
-system = mhd.MHD_4NN(num_nodes, num_layers, domain, rho, gamma, mu0, init_mu, factor_mu)
+system = mhd.MHD_1NN(num_nodes, num_layers, domain, rho, gamma, mu0, init_mu, factor_mu)
 learning_rate = tf.keras.optimizers.schedules.PiecewiseConstantDecay([1000, 2000, 10000], [5e-3, 1e-3, 5e-4, 1e-4])
 optimizer_v = tf.keras.optimizers.Adam(learning_rate)
 system.learn(optimizer_v, beta, epochs, n_sample, save_dir)
